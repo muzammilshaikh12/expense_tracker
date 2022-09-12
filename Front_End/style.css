@@ -5,7 +5,7 @@
     border: 1px solid black;
     margin-left: 35%;
     margin-right: 35%;
-    height: 12.5rem;
+    height: 15rem;
     border-radius: 5px;
     background-color: rgb(181, 248, 250);
 }
@@ -17,7 +17,10 @@
 .submitbtn{
 background-color: black;
 color: white;
-margin: 0 25%;
+margin: 0 35%;
+margin-top: 0.5rem;
+border: 1px solid black;
+border-radius: 4px;
 }
 
 .anchor{
@@ -32,8 +35,8 @@ margin: 0 25%;
     flex-direction: column;
    margin: 20rem;
     border: 1px solid black;
-    margin-left: 35%;
-    margin-right: 35%;
+    margin-left: 37.5%;
+    margin-right: 37.5%;
     height: 12.5rem;
     border-radius: 5px;
     background-color: rgb(181, 248, 250);
@@ -41,10 +44,13 @@ margin: 0 25%;
 }
 
 #loginBtn{
-    margin: 0 25%;
+    margin: 0 35%;
     margin-top:0.5rem;
     background-color: black;
-    color:white
+    color:white;
+    border: 1px solid black;
+    border-radius: 4px;
+
 }
 
 #anchorSign{
