@@ -11,10 +11,7 @@ exports.signup = (req,res,next)=>{
         }
         
         User.findAll()
-        .then(users=>{
-            if(users[0].email === email){
-               return res.status(400).json({message:'User already exists - Log in to continue'})
-            } else {
+        .then(users=>{ 
                 bcrypt.hash(password, 10 , async(err,hash)=>{
                     console.log(err)
                     await User.create({name,email,password:hash})
@@ -22,9 +19,9 @@ exports.signup = (req,res,next)=>{
                     .catch(err=>res.status(500).json({message:'Something went wrong'}))
                 })
                
-            }
+            
         })
-        .catch(err=>res.status(500).json({err:'Something Went wrong'}))
+        // .catch(err=>res.status(500).json({err:'Something Went wrong'}))
    
 }
 
@@ -54,7 +51,7 @@ exports.login=(req,res,next) =>{
             }
         })
 
-        // .catch(err=>{
-        //     res.status(500).json({message:err, success:false})
-        // })
+        .catch(err=>{
+            res.status(500).json({message:err, success:false})
+        })
 }

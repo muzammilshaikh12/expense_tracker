@@ -14,10 +14,18 @@ app.use(bodyParser.json());
 
 const userRoute = require('./routes/user')
 
+const expenseRoute = require('./routes/expense')
+
+const userTable = require('./models/user')
+
+const expenseTable = require('./models/expense')
+
 app.use('/users',userRoute)
 
-sequelize.sync()
-.then(result=>{
-    app.listen(3000)
+app.use('/expense',expenseRoute)
+
+sequelize.sync({force:true})
+.then(user=>{
+ app.listen(3000)
 })
 .catch(err=>console.log(err))
