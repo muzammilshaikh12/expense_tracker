@@ -24,7 +24,14 @@ app.use('/users',userRoute)
 
 app.use('/expense',expenseRoute)
 
-sequelize.sync({force:true})
+const User = require('./models/user')
+
+const Expense = require('./models/expense')
+
+User.hasMany(Expense)
+Expense.belongsTo(User)
+
+sequelize.sync()
 .then(user=>{
  app.listen(3000)
 })

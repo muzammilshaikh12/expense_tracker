@@ -40,6 +40,7 @@ function login(event) {
       if (response.status == 200) {
         console.log(response);
         alert("Successfully Logged in");
+        localStorage.setItem('token',response.data.token)
         window.location.href = "./expense.html";
       } else {
         throw new Error("Failed to login");
@@ -50,7 +51,7 @@ function login(event) {
 
 function addnewExpense(event) {
   event.preventDefault();
- 
+ const token = localStorage.getItem('token')
   let expenseDetails = {
     amount: document.getElementById("amount").value,
     description: document.getElementById("des").value,
@@ -58,7 +59,7 @@ function addnewExpense(event) {
   };
   
   axios
-    .post("http://localhost:3000/expense/addexpense", expenseDetails)
+    .post("http://localhost:3000/expense/addexpense", expenseDetails,{headers: {"Authorization": token}} )
     .then((response) => {
       alert("Expense Added"), console.log(response);
       
@@ -73,22 +74,41 @@ function showNewUseronScreen(expenseDetails){
     const d=document.getElementById('ul')
     const li= `<li id="${expenseDetails.amount}" class="expenses"> ${expenseDetails.amount},${expenseDetails.description},${expenseDetails.category}
      <button onclick = editUser('${expenseDetails.amount}','${expenseDetails.description}','${expenseDetails.category}')> Edit </button> 
-     <button onclick = deleteUser('${expenseDetails.amount}') style="color:white;background-color:rgb(24,31,46)"> Delete </button> 
+     <button onclick = deleteExpense('${expenseDetails.amount}') style="color:white;background-color:rgb(24,31,46)"> Delete </button> 
       </li>`
 d.innerHTML=d.innerHTML + li
    }
 
 window.addEventListener("DOMContentLoaded", (event) => {
+  const token = localStorage.getItem('token')
+  console.log(token)
   event.preventDefault();
-  axios.get("http://localhost:3000/expense/getexpense")
+  axios.get("http://localhost:3000/expense/getexpense", {headers: {"Authorization": token}})
   .then((response) => {
-    const d = document.getElementById("ul");
+     const d = document.getElementById("ul");
     for (let i = 0; i < response.data.data.length; i++) {
       const li = `<li id="${response.data.data[i].amount}"> ${response.data.data[i].amount},${response.data.data[i].description},${response.data.data[i].category}
             <button onclick = editUser('${response.data.data[i].amount}','${response.data.data[i].description}','${response.data.data[i].category}')> Edit </button> 
-            <button onclick = deleteUser('${response.data.data[i].amount}') style="color:white;background-color:rgb(24,31,46)"> Delete </button> 
+            <button onclick = deleteExpense('${response.data.data[i].id}') style="color:white;background-color:rgb(24,31,46)"> Delete </button> 
              </li>`;
       d.innerHTML = d.innerHTML + li;
     }
   });
 });
+
+
+function deleteExpense(expenseId) {
+    const token = localStorage.getItem('token')
+    // console.log(expenseId)
+    axios.delete(`http://localhost:3000/expense/deleteexpense/${expenseId}`, {headers: {"Authorization": token}})
+    .then(response=>{
+        console.log(response)
+        removeUserfromScreen(expenseId)
+    })
+    .catch(err=>console.log(err))
+}
+
+function removeUserfromScreen(expenseId){
+const id = `expense-${expenseId}`
+document.getElementById(id).remove()
+}

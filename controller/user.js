@@ -1,6 +1,8 @@
 const User = require('../models/user.js')
 const bcrypt = require('bcrypt')
 
+const token = require('jsonwebtoken')
+
 exports.signup = (req,res,next)=>{
     const {name,email,password} = req.body
     if(name == undefined || name.length === 0 
@@ -25,6 +27,11 @@ exports.signup = (req,res,next)=>{
    
 }
 
+function generateToken(id) {
+    return token.sign({userId:id}, 'secretkey')
+}
+
+
 exports.login=(req,res,next) =>{
     const{email,password} = req.body
     if(email == undefined || email.length === 0
@@ -40,7 +47,7 @@ exports.login=(req,res,next) =>{
                         res.status(400).json({message:'Something went wrong'})
                     }
                     if(result === true){
-                        res.status(200).json({message:'Successfully logged in', success:true})
+                        res.status(200).json({message:'Successfully logged in', success:true, token:generateToken(user[0].id)})
                     } else {
                         res.status(400).json({message: 'Password did not match', success:false})
                     }
