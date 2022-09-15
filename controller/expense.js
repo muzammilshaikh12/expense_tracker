@@ -1,4 +1,5 @@
 const Expense = require('../models/expense')
+const User = require('../models/user')
 
 exports.addExpense = (req,res,next) => {
     const {amount,description,category} = req.body
@@ -30,6 +31,24 @@ exports.showExpense = (req,res,next)=>{
         res.status(500).json({err,success:false})
     })
 }
+
+exports.showExpensePremium=(req,res,next)=>{
+   
+  User.findAll()
+  .then(users=>{
+   res.status(200).json({users,success:true})
+  })
+}
+
+
+exports.seeExpensePremium = (req,res,next)=>{
+    const id =  req.params.id
+    Expense.findAll({where:{userId:id}})
+    .then(users=>{
+     res.status(200).json({users,success:true})
+    })
+  }
+
 
 exports.deleteExpense = (req,res,next) =>{
     const id = req.params.id
