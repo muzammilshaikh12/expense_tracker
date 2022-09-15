@@ -9,16 +9,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"></script>
     <script src="scrript.js"></script>
 </head>
+<nav class="nav">
+    <h1>Expense Tracker</h1>
+    
+</nav>
 <body>
-    <form class="loginForm" onsubmit="login(event)">
+     <form class="loginForm" onsubmit="login(event)">
         <h3 class="signhead">Log-in</h3>
-        <label>Enter your email Id</label>
-        <input type="email" name="email" id="email">
-        <label>Enter your password</label>
-        <input type="password" name="password" id="password">
+        <label class="label">Enter your email Id:</label>
+        <input type="email" name="email" id="email" class="input">
+        <label class="label">Enter your password:</label>
+        <input type="password" name="password" id="password" class="input">
         <button type="submit" id="loginBtn">Login</button>
+        <a id="fpassbtn" href="./forgotpassword.html">Forgot Password?-Click here</a>
         <a href="./signup.html" id="anchorSign">Sign-Up</a>
     </form>
-   
+    <footer class="footer">
+        <h3>© Copyright 2022, Expense Tracker.</h3>
+    </footer>
 </body>
 </html>

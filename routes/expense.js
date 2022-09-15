@@ -12,4 +12,5 @@ router.get('/getexpense',authenticator.authenticator, expenseController.showExpe
 
 router.delete('/deleteexpense/:id',authenticator.authenticator,expenseController.deleteExpense)
 
+
 module.exports = router

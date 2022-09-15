@@ -24,7 +24,7 @@ exports.addExpense = (req,res,next) => {
 exports.showExpense = (req,res,next)=>{
     Expense.findAll({where:{userId :req.user.id }})
     .then(expenses=>{
-        res.status(200).json({data:expenses,success:true})
+        res.status(200).json({data:expenses,success:true, user:req.user})
     })
     .catch(err=>{
         res.status(500).json({err,success:false})

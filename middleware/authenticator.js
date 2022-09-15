@@ -9,6 +9,7 @@ console.log('hey hey hey hey hey ', user.userId)
 User.findByPk(user.userId)
 .then(user=>{
     req.user = user
+    // console.log(user)
     next()
 })
     }

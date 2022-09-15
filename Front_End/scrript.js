@@ -1,3 +1,5 @@
+// Sign Up
+
 function createUser(event) {
   event.preventDefault();
 
@@ -25,6 +27,8 @@ function createUser(event) {
     });
 }
 
+// Log In
+
 function login(event) {
   event.preventDefault();
 
@@ -49,6 +53,8 @@ function login(event) {
     .catch((err) => alert(err.message));
 }
 
+// Adding Expense
+
 function addnewExpense(event) {
   event.preventDefault();
  const token = localStorage.getItem('token')
@@ -72,43 +78,108 @@ function addnewExpense(event) {
 
 function showNewUseronScreen(expenseDetails){
     const d=document.getElementById('ul')
-    const li= `<li id="${expenseDetails.amount}" class="expenses"> ${expenseDetails.amount},${expenseDetails.description},${expenseDetails.category}
-     <button onclick = editUser('${expenseDetails.amount}','${expenseDetails.description}','${expenseDetails.category}')> Edit </button> 
-     <button onclick = deleteExpense('${expenseDetails.amount}') style="color:white;background-color:rgb(24,31,46)"> Delete </button> 
+    const li= `<li id="${expenseDetails.amount}" class="li"><div class="lidiv"> ${expenseDetails.amount},${expenseDetails.description},${expenseDetails.category}</div>
+     <button onclick = editUser('${expenseDetails.amount}','${expenseDetails.description}','${expenseDetails.category}') class="editbtn"> Edit </button> 
+     <button onclick = deleteExpense('${expenseDetails.amount}') class="deletebtn"> Delete </button> 
       </li>`
 d.innerHTML=d.innerHTML + li
    }
 
+  //  Fetching all the expenses of user from DB
+
 window.addEventListener("DOMContentLoaded", (event) => {
   const token = localStorage.getItem('token')
-  console.log(token)
+
+  
+  // console.log(token)
   event.preventDefault();
   axios.get("http://localhost:3000/expense/getexpense", {headers: {"Authorization": token}})
   .then((response) => {
+    if(response.data.user.isPremium == true) {
+      document.querySelector('.nav').classList.add('premium')
+      document.querySelector('.wrapper').classList.add('premium')
+      document.querySelector('.footer').classList.add('premium')
+      document.querySelector('#premiumbtn').remove()
+ }
      const d = document.getElementById("ul");
     for (let i = 0; i < response.data.data.length; i++) {
-      const li = `<li id="${response.data.data[i].amount}"> ${response.data.data[i].amount},${response.data.data[i].description},${response.data.data[i].category}
-            <button onclick = editUser('${response.data.data[i].amount}','${response.data.data[i].description}','${response.data.data[i].category}')> Edit </button> 
-            <button onclick = deleteExpense('${response.data.data[i].id}') style="color:white;background-color:rgb(24,31,46)"> Delete </button> 
+      const li = `<li id="${response.data.data[i].amount}" class="li"> <div class="lidiv">${response.data.data[i].amount},${response.data.data[i].description},${response.data.data[i].category}</div>
+            <button onclick = editUser('${response.data.data[i].amount}','${response.data.data[i].description}','${response.data.data[i].category}') class="editbtn"> Edit </button> 
+            <button onclick = deleteExpense('${response.data.data[i].id}') class="deletebtn"> Delete </button> 
              </li>`;
       d.innerHTML = d.innerHTML + li;
     }
   });
 });
 
+// Deleting the expense
+
 
 function deleteExpense(expenseId) {
     const token = localStorage.getItem('token')
-    // console.log(expenseId)
+   
     axios.delete(`http://localhost:3000/expense/deleteexpense/${expenseId}`, {headers: {"Authorization": token}})
     .then(response=>{
         console.log(response)
-        removeUserfromScreen(expenseId)
+       
     })
     .catch(err=>console.log(err))
 }
 
-function removeUserfromScreen(expenseId){
-const id = `expense-${expenseId}`
-document.getElementById(id).remove()
+// go premium
+const URLTOBACKEND = 'http://localhost:3000/';
+const EMAILID = 'muzammildoc@gmail.com'
+const PHONENO = 9110821690
+async function gopremium(event){
+const token = localStorage.getItem('token')
+event.preventDefault()
+const response = await axios.get('http://localhost:3000/premium',{headers: {"Authorization": token}})
+var options={
+  "key": response.data.key_id,
+  "name": "Muzammil Shaikh",
+  "order_id": response.data.order.id,
+  "prefill": {
+      "name": "Muzammil Shaikh",
+      "email": `${EMAILID}`,
+      "contact": `${PHONENO}`
+},
+"theme": {
+  "color": "#3399cc"
+},
+
+//This handler function will handle the success payment
+"handler": function (response) {
+  console.log(response);
+  axios.post(`http://localhost:3000/updatetransactionstatus`, {
+      orderId: options.order_id,
+      paymentId: response.razorpay_payment_id,
+  }, { headers: { "Authorization": token } }).then(() => {
+      alert('You are a Premium User Now')
+      document.querySelector('.nav').classList.add('premium')
+      document.querySelector('.wrapper').classList.add('premium')
+      document.querySelector('.footer').classList.add('premium')
+      document.querySelector('#premiumbtn').remove()
+  }).catch(() => {
+      alert('Something went wrong. Try Again!!!')
+  })
+
+}
+}
+
+const rzp1 = new Razorpay(options);
+rzp1.open();
+
+
+rzp1.on('payment.failed', function (response) {
+alert(response.error.code);
+alert(response.error.description);
+
+console.log(response)
+});
+}
+
+// Forgot Password
+function resetPassword(event) {
+  event.preventDefault()
+  console.log('Hello')
 }
